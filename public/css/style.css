@@ -1,0 +1,22 @@
+.form-signin 
+{
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+  border: 3px  solid;
+  border-radius: 10px 5px 10px 5px;
+  box-shadow: 6px 6px 0px rgb(38, 100, 38);
+}
+.font-weight-bold:hover
+{
+  text-shadow: 1px 1px 0px rgb(38, 100, 38);
+  color:rgb(38, 100, 38);
+}
+
+.BOA-border
+{
+  border: 3px  solid;
+  border-radius: 10px 5px 10px 5px;
+  box-shadow: 6px 6px 0px rgb(38, 100, 38);
+}
