@@ -1,6 +1,22 @@
 <?php require('view/admin/navView.php') ?>
 <?php ob_start() ?>
 <!--**************************************************-->
+<?php if($_GET['success']):?>
+<div aria-live="polite" aria-atomic="true" style="position: relative;">
+  <div class="toast bg-success" data-autohide="false" style="position: absolute; top: 0; right: 0;">
+    <div class="toast-header">
+      <strong class="mr-auto">Notification</strong>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+        <?=$_GET['success']?>
+    </div>
+  </div>
+</div>
+<?php endif;?>
+<!--**************************************************-->
 
 <div>
     <a  class ="btn btn-success mb-2" href="index.php?action=makeTicket">Créer un ticket</a>
@@ -33,9 +49,6 @@
                     <td><?=getfirstnameAndLastname($ticket['trainee_number']);?></td>
                     <td><?=$ticket['date_ticket']?></td>
                     <td>
-                        <?php if(!$ticket['trainee_number'] && $ticket['statut']!="close"): ?>
-                            <a class="btn btn-success text-white mb-1" href="index.php?action=editTicket&id=<?=$ticket['id']?>">Editer</a>
-                        <?php endif;?>
                         <a class="btn btn-success text-white" href="index.php?action=details&id=<?=$ticket['id']?>">Détails</a>
                     </td>
                 </tr>

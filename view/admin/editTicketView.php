@@ -22,7 +22,7 @@
         </div>
         <div class = "form-group">
             <label for="description">Description :</label> <br>
-            <textarea class="form-control" id = "description" name="description" rows="2" readonly><?=$ticket['description_']?></textarea>
+            <textarea class="form-control" id = "description" name="description" rows="2" readonly><?=htmlspecialchars($ticket['description_'])?></textarea>
         </div>
         <div class = "form-group">
             <label for="priority">Importance :</label> <br>
@@ -36,7 +36,7 @@
         <div class = "form-group">
             <label for="assignement">Attribuer à :</label> <br>
             <select class="form-control" id="assignement" name="assignement" >
-                <option value=<?=NULL?>>-Selectionner un stagiaire-</option>
+                <option value="null">-Selectionner un stagiaire-</option>
                 <?php
                 while($trainee = $trainees->fetch())
                 { ?>

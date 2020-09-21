@@ -6,6 +6,7 @@
    // include ('view/fonctions.php');
 #############################################################################
 
+    
     function dealingWithTheCookieShit()
     {
         $employeeManager = new EmployeeManager();
@@ -14,6 +15,7 @@
         $theRightEmployee = $employeeManager->getEmployee($_COOKIE['employeeNumber']);
 
         $_SESSION['employeeNumber']= $theRightEmployee['employee_number'];
+    
         $_SESSION['role']=$theRightEmployee['id_groupe'];
 
         header('Location: index.php');
@@ -39,6 +41,7 @@
                 }
 
                 $_SESSION['employeeNumber']= $theRightEmployee['employee_number'];
+    
                 $_SESSION['role']=$theRightEmployee['id_groupe'];
                 
                 header('Location: index.php?action=listTickets');
@@ -50,9 +53,23 @@
     {
         $ticketManager = new TicketManager();
 
-        $affectedLines = $ticketManager->addTicket($_SESSION['employeeNumber'],$_POST['type'],$_POST['title'],$_POST['description'],$_POST['priority']);
+        
+        if(isset($_FILES['theFile']) AND $_FILES['theFile']['error'] == 0)
+        {
+            
+            $target="public/Uploads/" . basename($_FILES['theFile']['name']);
 
-        header('Location: index.php?action=listTickets');
+            move_uploaded_file($_FILES['theFile']['tmp_name'], $target);
+
+            $affectedLines = $ticketManager->addTicketWithFile($_SESSION['employeeNumber'],$_POST['type'],$_POST['title'],$_POST['description'],$_POST['priority'], $target);
+        }
+        else
+        {
+            
+            $affectedLines = $ticketManager->addTicket($_SESSION['employeeNumber'],$_POST['type'],$_POST['title'],$_POST['description'],$_POST['priority']);
+        }
+
+       header('Location: index.php?action=listTickets&success=Ticket Ouvert');
     }
 #############################################################################
 
@@ -73,34 +90,38 @@
 
         $interventionManager = new InterventionManager();
 
-        $affectedLinesOne = $ticketManager->makeEdit($_POST['type'], $_POST['priority'],$_SESSION['employeeNumber'], $_GET['id']);
-        
-        if($_POST['assignement'])
+       
+        if($_POST['assignement']!="null")
         {
-            $affectedLinesOneOne = $ticketManager->makeAssignement($_POST['assignement'],$_GET['id']);
-        }
-
-        if($_FILES['theFile'])
-        {
-            $target="";
-            $affectedLinesOneTwo = $ticketManager->addFile($target, $_GET['id']);
-        }
-
-
-        $affectedLinesTwo = $interventionManager->addIntervention($_POST['assignement'],$_GET['id']);
-        // envoi de mail pour les interventions
-        $email = getEmail($_POST['assignement']);
-
-        $success = mail($email,"Nouvelle attribution d'interventions","Une nouvelle intervention vous à été attribuer veuillez la consulter");
-
-        if (!$success) 
-        {
-            $errorMessage = error_get_last()['message'];
+            $affectedLinesOneOne = $ticketManager->makeEditWithAssignement($_POST['type'], $_POST['priority'],$_POST['assignement'], $_SESSION['employeeNumber'],$_GET['id']);
             
-            //throw new Exception('error viens du mail3');
+            $affectedLinesTwo = $interventionManager->addIntervention($_POST['assignement'],$_GET['id']);
+
+            // envoi de mail pour les interventions
+
+            $email = getEmail($_POST['assignement']);
+    
+            $headers = "From: gesIntervention@BOA.com";
+
+            $success = mail($email,"Nouvelle attribution d'interventions","Une nouvelle intervention vous à été attribuer veuillez la consulter",$headers);
+
+            if (!$success) 
+            {
+                $errorMessage = error_get_last()['message'];
+                
+                throw new Exception('error viens du mail affectation d\'un stagiaire');
+            }
+
+        }
+        else
+        {
+            
+           $affectedLinesOne = $ticketManager->makeEdit($_POST['type'], $_POST['priority'], $_GET['id']);
+
         }
 
-        header('Location: index.php?action=listTickets');
+        
+        header('Location: index.php?action=listTickets&success=Ticket affecté et/ou edité');
     }
 #############################################################################
 function commenting()
@@ -126,14 +147,16 @@ function closeTicket()
     $ticket = $ticketManager->getTicket($_GET['id']);
 
     $email = getEmail($ticket['employee_number']);
-
-    $success = mail($email,"Fermeture de ticket","La Panne que vous avez déclarer à été résolu");
+    
+    $headers = "From: gesIntervention@BOA.com";
+    
+    $success = mail($email,"Fermeture de ticket","La Panne que vous avez déclarer à été résolu",$headers);
 
     if (!$success) 
     {
         $errorMessage = error_get_last()['message'];
 
-       // throw new Exception('error viens du mail2');
+       throw new Exception('error viens du mail fermeture de ticket');
     }
     //*******************************************************/
     header('Location: index.php?action=details&id='.$_GET['id']);
@@ -146,21 +169,36 @@ function reporting()
     $interventionManager = new InterventionManager();
     
     $ticketManager = new TicketManager();
-   
-    $affectedLines = $interventionManager->addReport($_POST['statut'], $_POST['report'], $_GET['id']);
+
+    if(isset($_FILES['theFile']) AND $_FILES['theFile']['error'] == 0)
+    {
+        
+        $target="public/Uploads/" . basename($_FILES['theFile']['name']);
+
+        move_uploaded_file($_FILES['theFile']['tmp_name'], $target);
+
+        $affectedLines = $interventionManager->addReportWithFile($_POST['statut'], $_POST['report'], $target, $_GET['id']);
+    }
+    else
+    {
+        
+        $affectedLines = $interventionManager->addReport($_POST['statut'], $_POST['report'], $_GET['id']);
+    }
     //envoi de mail pour le rapport
     $ticket = $ticketManager->getTicket($_GET['id']);
 
     $email = getEmail($ticket['admin_number']);
+    
+    $headers = "From: gesIntervention@BOA.com";
+    
+    $success = mail($email,"Nouveau rapport","Un rapport d'intervention à été envoyé",$headers);
 
-    $success = mail($email,"Nouveau rapport d'intervention envoyé",'Un rapport d\'intervention à été envoyé  pour le ticket n°'.$ticket['id'].'veillez le consulter');
-     
     if (!$success) 
     {
         $errorMessage = error_get_last()['message'];
 
-       // throw new Exception('error viens du mail1');
+       throw new Exception('error viens du mail pour la confirmation du rapport');
     }
     //*******************************************************/
-    header('Location: index.php?action=listTickets');
+    header('Location: index.php?action=listTickets&success=rapport envoyé');
 }

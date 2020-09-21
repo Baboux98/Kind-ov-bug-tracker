@@ -26,4 +26,11 @@
             $req=$db->prepare('UPDATE interventions SET statut = ?, report = ? WHERE id_ticket= ? AND statut = "attribuée" ');      
             return $req->execute(array($statut,$report,$id));
         }
+
+        public function addReportWithFile($statut,$report,$target,$id)
+        {
+            $db= $this->dbconnect();
+            $req=$db->prepare('UPDATE interventions SET statut = ?, report = ?, file_ = ? WHERE id_ticket= ? AND statut = "attribuée" ');      
+            return $req->execute(array($statut,$report,$target,$id));
+        }
     }

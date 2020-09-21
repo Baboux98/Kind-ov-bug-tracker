@@ -1,7 +1,7 @@
 <?php require('view/admin/navView.php') ?>
 
 <?php ob_start() ?>
-<h5 class="mt-5 mb-5 text-success text-center form-signin">Details de ticket</h5>
+<h5 class="mt-2 mb-5 text-success text-center form-signin">Details de ticket</h5>
   
 <?php  $ticketStatut= (string)$ticket['statut']?>
 <!--**************************************************-->
@@ -13,7 +13,7 @@
     </div>
     <div class = "row my-4">
         <div>
-            <span class ="h5 text-success col">Description : </span><?=$ticket['description_']?>
+            <span class ="h5 text-success col">Description : </span><?=htmlspecialchars($ticket['description_'])?>
         </div>
     </div>
     <div class = "row my-4">
@@ -37,6 +37,16 @@
             <span class ="h5 text-success col ">Attribué à : </span><?=getfirstnameAndLastname($ticket['trainee_number'])?>
         </div>
     </div>
+    <!--****************************************************-->
+    <?php if($ticket['file_']):?>
+    <div class = "row my-4">
+        <div class> 
+            <span class ="h5 text-success col ">ficher: </span>
+            <a href="<?=$ticket['file_']?>" target="_blank"> <?='fichier'.$ticket['id']?> </a>
+        </div>
+    </div>
+    <?php endif;?>
+  <!--****************************************************-->   
 <!--**************************************************-->
     <?php if($ticket['comment'] || $ticket['statut'] =="close" ) : ?>
         <div class = "row my-4">
@@ -56,7 +66,7 @@
     
 <!--**************************************************-->
     <div >
-        <h5 class="mt-5 mb-2 text-success text-center form-signin">Rapport d'intervention</h5>
+        <h5 class="mt-2 mb-2 text-success text-center form-signin">Rapport d'intervention</h5>
         <?php 
         while($intervention = $interventions->fetch())
         { ?>
@@ -71,6 +81,14 @@
                         <span class ="h5 text-success col ">Statut : </span><?=$intervention['statut']?>
                     </div>
                 </div>
+                <?php if($intervention['file_']):?>
+                    <div class = "row my-4">
+                        <div class> 
+                            <span class ="h5 text-success col ">ficher : </span>
+                            <a href="<?=$intervention['file_']?>" target="_blank"> <?='fichier'.$ticket['id']?> </a>
+                        </div>
+                    </div>
+                <?php endif;?>
                 <div class = "row my-4">
                     <div class> 
                         <span class ="h5 text-success col "> Rapport: </span><?=$intervention['report']?>
@@ -84,10 +102,10 @@
         ?>
     </div>
     <div class="text-center">
-        <?php if($ticketStatut == "open" && $report && $interventionStatut =="Succès") :?>
+        <?php if($ticketStatut == "open" || empty($ticket['trainee_number']) && $interventionStatut =="Succès") :?>
             <a class="btn bg-success text-white" href="index.php?action=closeTicket&amp;id=<?=$ticket['id']?>">Fermer le ticket</a>
         <?php endif; ?>
-        <?php if($report && $interventionStatut =="Echec" ) :?>
+        <?php if($interventionStatut =="Echec" || empty($ticket['trainee_number']) && $ticketStatut == "open") :?>
             <a class="btn bg-success text-white" href="index.php?action=editTicket&id=<?=$ticket['id']?>">Editer</a>
         <?php endif; ?>
         <a class="btn bg-success text-white" href="index.php">Retour</a>

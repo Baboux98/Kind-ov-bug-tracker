@@ -12,7 +12,7 @@
     </div>
     <div class = "row my-4">
         <div>
-            <span class ="h5 text-success col">Description : </span><?=$ticket['description_']?>
+            <span class ="h5 text-success col">Description : </span><?=htmlspecialchars($ticket['description_'])?>
         </div>
     </div>
     <div class = "row my-4">
@@ -46,6 +46,16 @@
             <span class ="h5 text-success col ">Attributeur : </span><?=getfirstnameAndLastname($ticket['admin_number'])?>
         </div>
     </div>
+    <!--****************************************************-->
+    <?php if($ticket['file_']):?>
+    <div class = "row my-4">
+        <div class> 
+            <span class ="h5 text-success col ">ficher: </span>
+            <a href="<?=$ticket['file_']?>" target="_blank"> <?='fichier'.$ticket['id']?> </a>
+        </div>
+    </div>
+    <?php endif;?>
+  <!--****************************************************-->   
     <?php if($ticket['comment']) : ?>
         <div class = "row my-4">
             <div class> 
@@ -57,7 +67,7 @@
     <!--**************************************************-->
 <?php if($ticket['statut']!="close") : ?>
     <div>
-        <h5 class="mt-5 mb-2 text-success text-center form-signin">Rapport d'intervention</h5>
+        <h5 class="mt-5 mb-1 text-success text-center form-signin">Rapport d'intervention</h5>
         <form class="py-2 px-4" action="index.php?action=reporting&amp;id=<?=$ticket['id']?>" method="post">
             <div class = "form-group">
                 <label for="statut">Type de rapport :</label>
@@ -70,11 +80,11 @@
                 <label for="report">Rapport :</label> <br>
                 <textarea class="form-control" id = "report" name="report" rows="2" required></textarea>
             </div>
+            <div class=" mb-1">
+                <input class=" form-control-file btn bg-success text-white" type="file" name="theFile">
+            </div>
             <div class="text-center">
                 <input class="btn bg-success text-white" name ="submit" type="submit" value="Faire un rapport">
-            </div>
-            <div>
-                <input class="btn bg-success text-white" type="file" name="theFile">
             </div>
         </form>
     </div>

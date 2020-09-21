@@ -31,12 +31,12 @@
                 <option>faible</option>
             </select>
         </div>
-        <div>
-            <input class="btn bg-success text-white" type="file" name="theFile">
+        <div class ="mb-2">
+            <input class=" form-control btn bg-success text-white" type="file" name="theFile">
         </div>
         <div class="text-center">
             <a class="btn bg-success text-white" href="index.php?action=listTickets">Retour</a>
-            <input class="btn bg-success text-white" name ="submit" type="submit" value="Ouvrir un ticket">
+            <input class=" toastable btn bg-success text-white" name ="submit" type="submit" value="Ouvrir un ticket">
         </div>
     </form>
 </div>

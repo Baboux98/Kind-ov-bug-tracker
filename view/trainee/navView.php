@@ -8,6 +8,9 @@
             <a class="nav-link" href="index.php?action=listTickets">Interventions</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="index.php?action=listTickets&page=myTickets">My tickets</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="index.php?action=makeTicket">Créer un ticket</a>
         </li>
         <li class="nav-item">

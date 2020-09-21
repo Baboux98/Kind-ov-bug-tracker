@@ -35,9 +35,19 @@
         }
         elseif($_SESSION['role'] == 3)
         {
-            $tickets = $ticketManager->getMyTicketsForTrainee($_SESSION['employeeNumber']);
+            if(isset($_GET['page']))
+            {
+                $tickets = $ticketManager->getMyTickets($_SESSION['employeeNumber']);
+            
+                require('view/employee/listTicketsView.php');
+            }
+            else
+            {
+                $tickets = $ticketManager->getMyTicketsForTrainee($_SESSION['employeeNumber']);
+                
+                require('view/trainee/listTicketsView.php');
+            }
 
-           require('view/trainee/listTicketsView.php');
            
         }
        

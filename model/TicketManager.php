@@ -10,7 +10,8 @@
             FROM tickets');
             return $tickets=$req;
         }
-
+        
+        
         public function getTicket($idTicket)
         {
             $db= $this->dbconnect();
@@ -19,7 +20,7 @@
             $ticket = $req->fetch();
             return $ticket;
         }
-
+        
         public function getMyTickets($myNumber)
         {
             $db= $this->dbconnect();
@@ -29,7 +30,7 @@
             $tickets = $req;
             return $tickets;
         }
-
+        
         public function getMyTicketsForTrainee($myNumber)
         {
             $db= $this->dbconnect();
@@ -39,6 +40,13 @@
             $tickets = $req;
             return $tickets;
         }
+        
+        public function addTicketWithFile($employeeNumber, $type, $title, $description, $priority,$file)
+        {
+            $db= $this->dbconnect();
+            $req=$db->prepare('INSERT INTO tickets(employee_number, type_, title, description_, priority,file_, date_ticket)VALUES(?,?,?,?,?,?,NOW())');      
+            return $req->execute(array($employeeNumber, $type, $title, $description, $priority, $file));
+        }
 
         public function addTicket($employeeNumber, $type, $title, $description, $priority)
         {
@@ -47,7 +55,14 @@
             return $req->execute(array($employeeNumber, $type, $title, $description, $priority));
         }
 
-        public function makeEdit($type,$priority,$trainee_number, $admin_number,$id)
+        public function makeEdit($type,$priority,$id)
+        {
+            $db= $this->dbconnect();
+            $req=$db->prepare('UPDATE tickets SET type_ = ?, priority = ? WHERE id = ?');      
+            return $req->execute(array($type, $priority, $id));
+        }
+
+        public function makeEditWithAssignement($type,$priority,$trainee_number, $admin_number,$id)
         {
             $db= $this->dbconnect();
             $req=$db->prepare('UPDATE tickets SET type_ = ?, priority = ?, trainee_number = ?, admin_number = ? WHERE id = ?');      
@@ -75,10 +90,4 @@
             return $req->execute(array($traineeNumber, $id));
         }
 
-        public function addFile($target,$id)
-        {
-            $db= $this->dbconnect();
-            $req=$db->prepare('UPDATE tickets SET file_ = ? WHERE id = ?');      
-            return $req->execute(array($target, $id));
-        }
     }

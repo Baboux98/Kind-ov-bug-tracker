@@ -10,11 +10,13 @@
             <span class ="h5 text-success col ">Titre : </span><?=$ticket['title']?>
         </div>
     </div>
+    <!--**************************************************-->
     <div class = "row my-4">
         <div>
-            <span class ="h5 text-success col">Description : </span><?=$ticket['description_']?>
+            <span class ="h5 text-success col">Description : </span><?=htmlspecialchars($ticket['description_'])?>
         </div>
     </div>
+    <!--**************************************************-->
     <div class = "row my-4">
         <div>
             <span class ="h5 text-success col">Type : </span><?=$ticket['type_']?>
@@ -26,6 +28,7 @@
             <span class ="h5 text-success col">Importance : </span><?=$ticket['priority']?>
         </div>
     </div>
+    <!--**************************************************-->
     <div class = "row my-4">
         <div class> 
             <span class ="h5 text-success col ">Date : </span><?=$ticket['date_ticket']?>
@@ -36,11 +39,22 @@
             <span class ="h5 text-success col ">Attribué à : </span><?=getfirstnameAndLastname($ticket['trainee_number'])?>
         </div>
     </div>
+    <!--**************************************************-->
+    <?php if($ticket['file_']):?>
+    <div class = "row my-4">
+        <div class> 
+            <span class ="h5 text-success col ">ficher: </span>
+            <a href="<?=$ticket['file_']?>" target="_blank"> <?='fichier'.$ticket['id']?> </a>
+        </div>
+    </div>
+    <?php endif;?>
+    <!--**************************************************-->
     <div class = "row my-4">
        <div class> 
            <span class ="h5 text-success col ">Commentaire: </span><?=showComment($ticket['comment'])?>
        </div>
     </div>
+    <!--**************************************************-->
     <div class="text-center">
             <a class="btn bg-success text-white" href="index.php">Retour</a>
     </div>

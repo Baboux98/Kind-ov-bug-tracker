@@ -2,6 +2,7 @@
     session_start();
     //$_COOKIE;
    // print_r($_SESSION);
+   //echo exec('whoami');
     include ('controller/frontend.php');
     include ('controller/backend.php');
 
